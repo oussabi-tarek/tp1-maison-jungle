@@ -1,0 +1,55 @@
+.section{
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    top: 80px;
+    width: 100%;
+
+}
+.containerCategories{
+    display: flex;
+    flex-direction: row;
+ 
+    
+}
+.containercateg_shop{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 9px;
+}
+.imageItem{
+    width:100px;
+    height: 100px;
+    padding: 10px;
+    border-radius:20%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.containerShopList{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+}
+.containerShop{
+    margin: 10px;
+
+}
+.waterScaler{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 5px;
+}
+.lightScaler{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 5px;
+}
+.careScaleContainer{
+    display: flex;
+    flex-direction: column;
+}
+.reinitialiser{
+    margin-left: 4px;
+}

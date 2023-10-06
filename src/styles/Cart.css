@@ -1,0 +1,11 @@
+.containerCart{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:25%;
+    height: auto;
+    background-color: chartreuse;
+    padding: 20px;
+
+}

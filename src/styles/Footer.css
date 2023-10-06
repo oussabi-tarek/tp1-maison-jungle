@@ -1,0 +1,14 @@
+.containerFooter{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    bottom: 0;
+    height: auto;
+    width: auto;
+    position: fixed;
+    margin-bottom: 50px;
+    left: 40%;
+}
+.inputmail{
+    margin-top: 5px;
+}
