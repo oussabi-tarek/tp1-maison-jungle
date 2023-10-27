@@ -9,14 +9,14 @@ function CareScale(props){
         <div className="waterScaler">
             {
              Array.from({ length: waterLength }, (_, index) => (
-                    <img  src={water}  />
+                    <img  src={water} key={index} />
              ))
             }
         </div>
         <div className="lightScaler">
         {
              Array.from({ length: lightLength}, (_, index) => (
-                    <img src={light}  />
+                    <img src={light} key={index}  />
              ))
             }
         </div>

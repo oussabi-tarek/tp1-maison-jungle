@@ -2,13 +2,15 @@ import Cart from "./Cart";
 import Categories from "./Categories";
 import ShoppingList from "./ShoppingList";
 import "../styles/Section.css";
-import { plantList } from "../data/plantList";
 import { useEffect, useState } from "react";
+import { useGetPlants } from "../hooks/plant/useGetPlants";
 
 function Section(){
     const [activeCategory, setActiveCategory] = useState('classique');
     const [panierItems, setPanierItems] = useState([]); 
     const [totalPrice, setTotalPrice] = useState(0);
+    const {plantList}=useGetPlants();
+
     const getClassiquePlantList = () => {
         const plantListFiltered = plantList.filter((plant) => {
             return plant.category === 'classique';
@@ -18,10 +20,7 @@ function Section(){
     }
     useEffect(()=>{
         if(JSON.parse(localStorage.getItem('panierItems'))!==null) {
-          // get panierItems from localStorage and calculate totalPrice
-            // setPanierItems(JSON.parse(localStorage.getItem('panierItems')));
              const localStorageItems=JSON.parse(localStorage.getItem('panierItems'));
-             console.log(localStorageItems);
                 localStorageItems.forEach((plant)=>{
                     let exist=false;
                     panierItems.forEach((item)=>{
@@ -32,12 +31,15 @@ function Section(){
                         panierItems.push(plant);
                     }
                 })
-            
              getTotalPrice();
         }
         else setPanierItems([]);
     },[])
     const [activePlantList, setActivePlantList] = useState(getClassiquePlantList());
+
+    useEffect(()=>{
+        setActivePlantList(getClassiquePlantList());
+    },[plantList])
 
     const changeActiveCategory = event => {
         setActiveCategory(event.target.value);
@@ -103,13 +105,18 @@ function Section(){
         getTotalPrice();
         localStorage.setItem('panierItems', JSON.stringify(panierItems));
     }
+    const getImageFromBytes=(blobData)=>{
+        const blob = new Blob([new Uint8Array(blobData)], { type: 'image/jpg' }); 
+        const imageUrl =window.URL.createObjectURL(blob);
+        return imageUrl;
+    }
 
     return(
         <div className="section">
             <Cart panierItems={panierItems} totalPrice={totalPrice} onViderClick={onViderClick}/>
             <div className="containercateg_shop">
                 <Categories activeCategory={activeCategory} getAllCategories={getAllCategories} onReinitialzeClick={onReinitialzeClick} changeActiveCategory={changeActiveCategory}/>
-                <ShoppingList activePlantList={activePlantList} onAjoutClick={onAjoutClick} />
+                <ShoppingList getImageFromBytes={getImageFromBytes} activePlantList={activePlantList} onAjoutClick={onAjoutClick} />
             </div>
         </div>
     )
