@@ -1,16 +1,19 @@
+.sectionContainer{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    margin-top: 80px;
+}
 .section{
     display: flex;
     flex-direction: row;
-    position: fixed;
-    top: 80px;
+    top: 20px;
     width: 100%;
-
 }
 .containerCategories{
     display: flex;
     flex-direction: row;
- 
-    
 }
 .containercateg_shop{
     display: flex;
@@ -32,9 +35,32 @@
     flex-direction: row;
     margin: 10px;
 }
+.priceShop{
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    padding: 2px 8px 0px 0px;
+    width: 22px;
+    text-align: center;
+    right: 5px;
+}
+
+.priceShop p{
+    font-size: 10px;
+    color: white;
+    border-radius: 15px 10px 15px 0px;
+    background-color: rgb(0, 88, 58);
+}
+.imgShop{
+    position: relative;
+    z-index: 1;
+}
+.imgpriceShop{
+    position: relative;
+    display: inline;
+}
 .containerShop{
     margin: 10px;
-
 }
 .waterScaler{
     display: flex;
@@ -52,4 +78,34 @@
 }
 .reinitialiser{
     margin-left: 4px;
+}
+.containerRegister{
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin:20px
+}
+.containerRegister input{
+    width: 200px;
+    height: 20px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(0, 88, 58);
+    padding: 5px;
+}
+.containerRegister button{
+    width: 100px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(0, 88, 58);
+    padding: 5px;
+    background-color: rgb(0, 88, 58);
+    color: white;
+}
+.containerRegister button:hover{
+    background-color: rgb(65, 196, 152);
+    color: white;
+    cursor: pointer;
 }

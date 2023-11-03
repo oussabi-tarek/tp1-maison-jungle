@@ -4,19 +4,28 @@ import ShoppingList from "./ShoppingList";
 import "../styles/Section.css";
 import { useEffect, useState } from "react";
 import { useGetPlants } from "../hooks/plant/useGetPlants";
+import Register from "./Register";
+import { useAddUser } from "../hooks/user/useAddUser";
+import { useAddCommand } from "../hooks/command/useAddCommand";
 
 function Section(){
     const [activeCategory, setActiveCategory] = useState('classique');
     const [panierItems, setPanierItems] = useState([]); 
     const [totalPrice, setTotalPrice] = useState(0);
+    const [showRegister, setShowRegister] = useState(false); 
     const {plantList}=useGetPlants();
+    const {saveUser}=useAddUser();
+    const {saveCommand}=useAddCommand();
 
     const getClassiquePlantList = () => {
         const plantListFiltered = plantList.filter((plant) => {
-            return plant.category === 'classique';
+            return plant.category.label === 'classique';
         }
         );
       return plantListFiltered;
+    }
+    const onSaveCartClick=()=>{
+        setShowRegister(true);
     }
     useEffect(()=>{
         if(JSON.parse(localStorage.getItem('panierItems'))!==null) {
@@ -44,7 +53,7 @@ function Section(){
     const changeActiveCategory = event => {
         setActiveCategory(event.target.value);
         const plantListFiltered = plantList.filter((plant) => {
-            return plant.category === event.target.value;
+            return plant.category.label === event.target.value;
         });
         setActivePlantList(plantListFiltered);
     }
@@ -60,7 +69,7 @@ function Section(){
     }
     const getAllCategories = () => {
         const categories = plantList.map((plant) => {
-            return plant.category;
+            return plant.category.label;
         });
         // delete duplicate categories
         for(let i=0; i<categories.length; i++){
@@ -79,7 +88,7 @@ function Section(){
           total+=plant.price*plant.quantity;
         })
         setTotalPrice(total);
-      }
+    }
     const onAjoutClick = (plant) => {
         let exist=false;
         panierItems.forEach((item)=>{
@@ -110,14 +119,39 @@ function Section(){
         const imageUrl =window.URL.createObjectURL(blob);
         return imageUrl;
     }
+    const onSaveUserInfosClick= async (event)=>{
+        event.preventDefault();
+        const form=event.target;
+        const fullName=form.fullName.value;
+        const email=form.email.value;
+        const address=form.address.value;
+        const phone=form.phone.value;
+        const userInfos={fullName,email,address,phone};
+        localStorage.setItem('userInfos',JSON.stringify(userInfos));
+        setShowRegister(false);
+        const items=[];
+        panierItems.forEach((item)=>{
+            items.push({id:item._id,quantity:item.quantity});
+        })
+        const commandToSave={email,items};
+        console.log(commandToSave);
+        await saveUser(userInfos);
+        saveCommand(commandToSave)
+    }
 
     return(
+        <div className="sectionContainer">
         <div className="section">
-            <Cart panierItems={panierItems} totalPrice={totalPrice} onViderClick={onViderClick}/>
+            <Cart panierItems={panierItems} totalPrice={totalPrice} onSaveCartClick={onSaveCartClick} onViderClick={onViderClick}/>
             <div className="containercateg_shop">
                 <Categories activeCategory={activeCategory} getAllCategories={getAllCategories} onReinitialzeClick={onReinitialzeClick} changeActiveCategory={changeActiveCategory}/>
                 <ShoppingList getImageFromBytes={getImageFromBytes} activePlantList={activePlantList} onAjoutClick={onAjoutClick} />
             </div>
+            </div>
+        {showRegister && <div className="register">
+        <Register onSaveUserInfosClick={onSaveUserInfosClick}/>
+        </div>
+        }
         </div>
     )
 }

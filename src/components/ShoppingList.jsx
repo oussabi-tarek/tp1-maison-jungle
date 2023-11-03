@@ -1,6 +1,7 @@
 import PlantItem from './PlantItem'
 
 function ShoppingList(props){
+    
     return(
         <div className="containerShopList">
          {

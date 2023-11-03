@@ -1,13 +1,13 @@
-import axios from "axios";
 import { useAxios } from "../axios/useAxios";
 import { useEffect, useState } from "react";
+import { ENDPOINTS } from "../endpoints";
 
 export const useGetPlants =  () => {
-   const axiosInstance=useAxios(); 
+   const axiosInstance = useAxios();
    const [data,setDate]=useState([]);
    
    useEffect(()=>{
-         axiosInstance.get("/")
+         axiosInstance.get(ENDPOINTS.PLANT)
          .then((res)=>{
               setDate(res.data)
          })

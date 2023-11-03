@@ -13,7 +13,9 @@ function Cart(props){
           }
         </ul>
       <p>Total : {props.totalPrice}$</p>  
-      <button onClick={props.onViderClick}>Vider le panier</button>
+      <button className='button'  onClick={props.onViderClick} >Vider le panier</button>
+      <br/>
+      <button className='button' onClick={props.onSaveCartClick}>Enregistrer</button>
     </div>
    )
 }
