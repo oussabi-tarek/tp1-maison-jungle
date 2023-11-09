@@ -1,9 +1,9 @@
 import '../styles/Cart.css'
 
 function Cart(props){
-
    return(
     <div className='containerCart'>
+      { props.saved &&  <p className='itemsAdded'>Items saved! add others</p>}
       <h2>Panier</h2>
         <ul>
           { props.panierItems!==null &&
@@ -13,10 +13,14 @@ function Cart(props){
           }
         </ul>
       <p>Total : {props.totalPrice}$</p>  
+      { props.panierItems!==null && props.panierItems.length>0 &&
+      <>
       <button className='button'  onClick={props.onViderClick} >Vider le panier</button>
       <br/>
       <button className='button' onClick={props.onSaveCartClick}>Enregistrer</button>
-    </div>
+      </>
+      }
+      </div>
    )
 }
 export default Cart;

@@ -4,18 +4,22 @@ import ShoppingList from "./ShoppingList";
 import "../styles/Section.css";
 import { useEffect, useState } from "react";
 import { useGetPlants } from "../hooks/plant/useGetPlants";
-import Register from "./Register";
-import { useAddUser } from "../hooks/user/useAddUser";
 import { useAddCommand } from "../hooks/command/useAddCommand";
+import Login from "./Login";
+import { ENDPOINTS } from "../hooks/endpoints";
+import {useAxios } from "../hooks/axios/useAxios";
 
-function Section(){
+function Section(props){
     const [activeCategory, setActiveCategory] = useState('classique');
     const [panierItems, setPanierItems] = useState([]); 
+    const [saved, setSaved] = useState(false);
+    const axiosInstance = useAxios();
     const [totalPrice, setTotalPrice] = useState(0);
-    const [showRegister, setShowRegister] = useState(false); 
+    const [showLogin, setshowLogin] = useState(false); 
+    const [badCredentials, setbadCredentials] = useState(false);
     const {plantList}=useGetPlants();
-    const {saveUser}=useAddUser();
     const {saveCommand}=useAddCommand();
+    
 
     const getClassiquePlantList = () => {
         const plantListFiltered = plantList.filter((plant) => {
@@ -25,7 +29,25 @@ function Section(){
       return plantListFiltered;
     }
     const onSaveCartClick=()=>{
-        setShowRegister(true);
+        if(JSON.parse(localStorage.getItem('userInfos'))==null) {
+          setshowLogin(true);
+        }
+        else{
+            const items=[];
+            panierItems.forEach((item)=>{
+                items.push({id:item._id,quantity:item.quantity});
+            })
+            if(items.length>0){
+            const email=JSON.parse(localStorage.getItem('userInfos')).email;
+            const commandToSave={email,items};
+            saveCommand(commandToSave);
+            onViderClick();
+            setSaved(true);
+            setTimeout(()=>{
+                setSaved(false);
+            },2000)
+            }
+        }
     }
     useEffect(()=>{
         if(JSON.parse(localStorage.getItem('panierItems'))!==null) {
@@ -119,37 +141,56 @@ function Section(){
         const imageUrl =window.URL.createObjectURL(blob);
         return imageUrl;
     }
-    const onSaveUserInfosClick= async (event)=>{
+    const onSaveUserInfosClick=async(event)=>{
         event.preventDefault();
-        const form=event.target;
-        const fullName=form.fullName.value;
-        const email=form.email.value;
-        const address=form.address.value;
-        const phone=form.phone.value;
-        const userInfos={fullName,email,address,phone};
-        localStorage.setItem('userInfos',JSON.stringify(userInfos));
-        setShowRegister(false);
-        const items=[];
-        panierItems.forEach((item)=>{
-            items.push({id:item._id,quantity:item.quantity});
+        const userToLogin={email:event.target.email.value,password:event.target.password.value};
+        axiosInstance.post(ENDPOINTS.USER,userToLogin)
+            .then((res)=>{
+             if(res.data.length>0){
+                setbadCredentials(false);
+                props.setLoggedIn(true);
+                const fullName=res.data[0].fullName;
+                const email=res.data[0].email;
+                const address=res.data[0].address;
+                const phone=res.data[0].phone;
+                const userInfos={fullName,email,address,phone,loggedIn:true};
+                localStorage.setItem('userInfos',JSON.stringify(userInfos));
+                setshowLogin(false);
+                const items=[];
+                panierItems.forEach((item)=>{
+                    items.push({id:item._id,quantity:item.quantity});
+                })
+                if(items.length>0){
+                const commandToSave={email,items};
+                saveCommand(commandToSave);
+                onViderClick();
+                setSaved(true);
+                    setTimeout(()=>{
+                        setSaved(false);
+                    },2000)
+                }
+              }
+              else{
+                setbadCredentials(true);
+              } 
+            })
+            .catch((err)=>{
+            console.log(err)
         })
-        const commandToSave={email,items};
-        console.log(commandToSave);
-        await saveUser(userInfos);
-        saveCommand(commandToSave)
+ 
     }
 
     return(
         <div className="sectionContainer">
         <div className="section">
-            <Cart panierItems={panierItems} totalPrice={totalPrice} onSaveCartClick={onSaveCartClick} onViderClick={onViderClick}/>
+            <Cart saved={saved} panierItems={panierItems} totalPrice={totalPrice} onSaveCartClick={onSaveCartClick} onViderClick={onViderClick}/>
             <div className="containercateg_shop">
                 <Categories activeCategory={activeCategory} getAllCategories={getAllCategories} onReinitialzeClick={onReinitialzeClick} changeActiveCategory={changeActiveCategory}/>
                 <ShoppingList getImageFromBytes={getImageFromBytes} activePlantList={activePlantList} onAjoutClick={onAjoutClick} />
             </div>
             </div>
-        {showRegister && <div className="register">
-        <Register onSaveUserInfosClick={onSaveUserInfosClick}/>
+        {showLogin && panierItems.length>0  && <div className="register">
+        <Login onSaveUserInfosClick={onSaveUserInfosClick} badCredentials={badCredentials}/>
         </div>
         }
         </div>

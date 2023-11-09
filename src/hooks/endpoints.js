@@ -1,5 +1,6 @@
 export const ENDPOINTS={
-    USER: '/users',
+    USERS: '/users',
+    USER: '/user',
     PLANT: '/plants',
     COMMAND: '/commands',
 }

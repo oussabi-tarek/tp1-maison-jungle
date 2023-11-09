@@ -17,3 +17,6 @@
     right: 0;
     z-index: 100;
 }
+.container button{
+    margin-left: 20px;
+}

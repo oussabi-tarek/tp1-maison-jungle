@@ -6,7 +6,7 @@ export const useAddUser = () => {
    const axiosInstance = useAxios();
 
    const saveUser =async (userToSave ) => {
-            axiosInstance.post(ENDPOINTS.USER,userToSave)
+            axiosInstance.post(ENDPOINTS.USERS,userToSave)
             .then((res)=>{
                     console.log(res.data)
             })
