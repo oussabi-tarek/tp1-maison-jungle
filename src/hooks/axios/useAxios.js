@@ -6,7 +6,6 @@ export const useAxios = () => {
    const axiosInstance = axios.create({
         baseURL: process.env.REACT_APP_VITE_API_BASE_URL,
      });
-
      useEffect(()=>{
         const interval=setInterval(()=>{
             axiosInstance.post(ENDPOINTS.REFRESH, {refreshToken:localStorage.getItem("refreshToken") }).then((res)=>{
@@ -19,8 +18,10 @@ export const useAxios = () => {
      },[]);
      useEffect(()=>{
        const intervalRefreshToken=setInterval(()=>{
+          localStorage.clear();
           window.location.href="/login";
        },3*24*60*60*1000);
+        return()=>clearInterval(intervalRefreshToken);
      },[])
 
     axiosInstance.interceptors.request.use(  
