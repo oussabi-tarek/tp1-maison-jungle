@@ -122,6 +122,13 @@
     align-items: center;
     margin:20px
 }
+.containerLogin form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin:20px
+
+}
 .containerLogin input{
     width: 200px;
     height: 20px;

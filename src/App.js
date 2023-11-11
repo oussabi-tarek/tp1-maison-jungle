@@ -6,6 +6,7 @@ import './styles/Home.css'
 import Section from './components/Section';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Register from './components/Register';
+import Login from './components/Login';
 
 function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -13,10 +14,11 @@ function App() {
   return (
    <BrowserRouter>
    <Routes>
+    <Route path='/login' element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
     <Route path='/' element={
       <div className='homeContainer'>
       <NavBar loggedIn={loggedIn}/>
-      <Section loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+      <Section />
       <Footer/>
       </div>
     }/>

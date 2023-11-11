@@ -1,12 +1,11 @@
 import { ENDPOINTS  } from "../endpoints";
 import { useAxios } from "../axios/useAxios";
-import { useEffect, useState } from "react"; 
 
 export const useAddUser = () => {
    const axiosInstance = useAxios();
 
    const saveUser =async (userToSave ) => {
-            axiosInstance.post(ENDPOINTS.USERS,userToSave)
+            axiosInstance.post(ENDPOINTS.SIGNUP,userToSave)
             .then((res)=>{
                     console.log(res.data)
             })

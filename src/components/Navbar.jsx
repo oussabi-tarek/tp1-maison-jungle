@@ -12,7 +12,7 @@ function NavBar(props){
    
    const onLogoutClick=()=>{
          localStorage.removeItem('userInfos');
-         window.location.href='/';
+         window.location.href='/login';
    }
    
   return (

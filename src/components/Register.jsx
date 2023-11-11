@@ -29,7 +29,7 @@ function Register(){
                 <input type="tel" name="phone" placeholder="Phone" />
                 <button>Save</button>
             </form>    
-            <a href='/'>Page Acceuil</a>
+            <a href='/'>Login</a>
         </div>
     );
 }

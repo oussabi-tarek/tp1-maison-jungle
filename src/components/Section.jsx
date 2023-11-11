@@ -5,21 +5,20 @@ import "../styles/Section.css";
 import { useEffect, useState } from "react";
 import { useGetPlants } from "../hooks/plant/useGetPlants";
 import { useAddCommand } from "../hooks/command/useAddCommand";
-import Login from "./Login";
-import { ENDPOINTS } from "../hooks/endpoints";
-import {useAxios } from "../hooks/axios/useAxios";
 
-function Section(props){
+function Section(){
     const [activeCategory, setActiveCategory] = useState('classique');
     const [panierItems, setPanierItems] = useState([]); 
     const [saved, setSaved] = useState(false);
-    const axiosInstance = useAxios();
     const [totalPrice, setTotalPrice] = useState(0);
-    const [showLogin, setshowLogin] = useState(false); 
-    const [badCredentials, setbadCredentials] = useState(false);
     const {plantList}=useGetPlants();
     const {saveCommand}=useAddCommand();
     
+    useEffect(()=>{
+       if(!(JSON.parse(localStorage.getItem('userInfos'))!==null && JSON.parse(localStorage.getItem('userInfos')).loggedIn)){
+         window.location.href='/login';
+       }
+    },[])
 
     const getClassiquePlantList = () => {
         const plantListFiltered = plantList.filter((plant) => {
@@ -29,10 +28,7 @@ function Section(props){
       return plantListFiltered;
     }
     const onSaveCartClick=()=>{
-        if(JSON.parse(localStorage.getItem('userInfos'))==null) {
-          setshowLogin(true);
-        }
-        else{
+        if(JSON.parse(localStorage.getItem('userInfos'))!==null) {
             const items=[];
             panierItems.forEach((item)=>{
                 items.push({id:item._id,quantity:item.quantity});
@@ -141,44 +137,6 @@ function Section(props){
         const imageUrl =window.URL.createObjectURL(blob);
         return imageUrl;
     }
-    const onSaveUserInfosClick=async(event)=>{
-        event.preventDefault();
-        const userToLogin={email:event.target.email.value,password:event.target.password.value};
-        axiosInstance.post(ENDPOINTS.USER,userToLogin)
-            .then((res)=>{
-             if(res.data.length>0){
-                setbadCredentials(false);
-                props.setLoggedIn(true);
-                const fullName=res.data[0].fullName;
-                const email=res.data[0].email;
-                const address=res.data[0].address;
-                const phone=res.data[0].phone;
-                const userInfos={fullName,email,address,phone,loggedIn:true};
-                localStorage.setItem('userInfos',JSON.stringify(userInfos));
-                setshowLogin(false);
-                const items=[];
-                panierItems.forEach((item)=>{
-                    items.push({id:item._id,quantity:item.quantity});
-                })
-                if(items.length>0){
-                const commandToSave={email,items};
-                saveCommand(commandToSave);
-                onViderClick();
-                setSaved(true);
-                    setTimeout(()=>{
-                        setSaved(false);
-                    },2000)
-                }
-              }
-              else{
-                setbadCredentials(true);
-              } 
-            })
-            .catch((err)=>{
-            console.log(err)
-        })
- 
-    }
 
     return(
         <div className="sectionContainer">
@@ -189,10 +147,6 @@ function Section(props){
                 <ShoppingList getImageFromBytes={getImageFromBytes} activePlantList={activePlantList} onAjoutClick={onAjoutClick} />
             </div>
             </div>
-        {showLogin && panierItems.length>0  && <div className="register">
-        <Login onSaveUserInfosClick={onSaveUserInfosClick} badCredentials={badCredentials}/>
-        </div>
-        }
         </div>
     )
 }

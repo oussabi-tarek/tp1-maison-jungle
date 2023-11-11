@@ -7,15 +7,14 @@ export const useAddCommand = () => {
     const saveCommand = (commandToSave) => {
         axiosInstance.post(ENDPOINTS.COMMAND, commandToSave)
         .then((res)=>{
-            console.log(res.data)
+            
         })
         .catch((err)=>{
             console.log(err)
         })
     }
+
     return {
         saveCommand
     }
-     
-
 }
